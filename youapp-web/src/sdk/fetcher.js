@@ -1,7 +1,8 @@
 const { generateApi } = require("swagger-typescript-api")
 const { resolve } = require("path")
 
-const output = generateApi({
+// load sdk from youapp service
+generateApi({
   name: "index",
   url: "http://localhost:3000/docs-json",
   output: resolve(process.cwd(), "./src/sdk/youapp-service"),

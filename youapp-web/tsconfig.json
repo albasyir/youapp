@@ -21,6 +21,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/sdk/fetcher.js", "src/components/atoms/input-field"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/sdk/youapp-service/fetcher.js", "src/components/atoms/input-field"],
   "exclude": ["node_modules"]
 }
