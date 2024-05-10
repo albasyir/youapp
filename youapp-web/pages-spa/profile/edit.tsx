@@ -1,11 +1,12 @@
 import ActionableCard from "components/molecules/actionable-card";
+import UserEditForm from "components/user-edit-form";
 import UserInterestCard from "components/user-interest-card";
 import UserViewerCard from "components/user-viewer-card";
 import React from "react";
-import { Link, useOutletContext } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 import { LoginResponseDto } from "sdk/youapp-service";
 
-function ProfilePage() {
+export default function ProfileEditPage() {
   const context: Partial<{
     session: LoginResponseDto
   }> = useOutletContext();
@@ -18,19 +19,15 @@ function ProfilePage() {
     <>
       <UserViewerCard user={context.session.user} cardClassName="mb-6" />
 
-      <ActionableCard
-        title="About"
-        action={<Link to="/me/edit">Edit</Link>}
-        className="mb-3"
-      >
-        <span className="opacity-25">
-          Add in your your to help others know you better
+      <ActionableCard title="About" className="mb-3 bg-[#0E191F]" action={
+        <span className="text-[#F3EDA6]">
+          Save & Update 
         </span>
+      }>
+        <UserEditForm />
       </ActionableCard>
 
       <UserInterestCard />
     </>
   );
 }
-
-export default ProfilePage;

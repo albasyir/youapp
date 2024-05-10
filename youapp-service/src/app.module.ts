@@ -1,11 +1,11 @@
-import { Module, OnModuleInit } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { Config, config } from './app.config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { SwaggerModule } from '@nestjs/swagger';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [
@@ -53,7 +53,8 @@ import { SwaggerModule } from '@nestjs/swagger';
     // ==== APP MODULE START =====
 
     AuthModule,
-    UserModule
+    UserModule,
+    ProfileModule
   ],
 })
 export class AppModule {

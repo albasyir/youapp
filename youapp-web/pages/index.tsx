@@ -5,6 +5,7 @@ import RegistrationPage from 'pages-spa/auth/registration';
 import ProfilePage from 'pages-spa/profile';
 import AuthLayout from 'layouts/auth';
 import PlatformLayout from 'layouts/platform';
+import ProfileEditPage from 'pages-spa/profile/edit';
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
 
         <Route element={<PlatformLayout />}>
           <Route path="/" element={<ProfilePage />} />
+          <Route path="/me/edit" element={<ProfileEditPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

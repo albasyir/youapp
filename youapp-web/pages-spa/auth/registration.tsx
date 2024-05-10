@@ -1,6 +1,6 @@
 import { HttpStatusCode } from 'axios';
-import Button from 'components/atoms/button';
-import InputField from 'components/atoms/input-field';
+import ButtonAtom from 'components/atoms/button';
+import InputField from 'components/molecules/input-field';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { youappService, YouAppServiceError } from 'services/youapp';
@@ -11,7 +11,7 @@ const RegistrationPage: React.FC = () => {
   const [email, setEmail] = useState("abdulazizalbasyir119@gmail.com");
   const [password, setPassword] = useState("user-password");
   const [confirmPassword, setConfirmPassword] = useState("user-password");
-  const canBeSubmitted = Boolean(password !== confirmPassword);
+  const canBeSubmitted = Boolean(password.length < 1 || password !== confirmPassword);
   const navigate = useNavigate();
 
   const handleUsernameChange = (value: string) => {
@@ -58,7 +58,7 @@ const RegistrationPage: React.FC = () => {
 
     if (!identity) return;
 
-    window.localStorage.setItem("token", identity.data.token);
+    window.localStorage.setItem("user", JSON.stringify(identity.data));
     navigate("/");
   };
 
@@ -67,15 +67,16 @@ const RegistrationPage: React.FC = () => {
       <h1>Register</h1>
       <form onSubmit={handleSubmit}>
         <InputField
+          variant='glass'
           className="mb-3"
           id="email"
-          label="email"
           type="text"
           value={email}
           onChange={handleEmailChange}
           placeholder="Email"
         />
         <InputField
+          variant='glass'
           className="mb-3"
           id="username"
           label="Create Username"
@@ -85,27 +86,27 @@ const RegistrationPage: React.FC = () => {
           placeholder="Username"
         />
         <InputField
+          variant='glass'
           className="mb-3"
           id="password"
-          label="Create Password"
           type="password"
           value={password}
           onChange={handlePasswordChange}
           placeholder="Password"
         />
         <InputField
+          variant='glass'
           className="mb-3"
           id="password-confirm"
-          label="Confirm Password"
           type="password"
           value={confirmPassword}
           onChange={handleConfirmPassword}
           placeholder="Password"
         />
         <div className="mt-4">
-          <Button type="submit" disabled={canBeSubmitted}>
+          <ButtonAtom type="submit" disabled={canBeSubmitted} width='w-full'>
             Register
-          </Button>
+          </ButtonAtom>
         </div>
       </form>
 

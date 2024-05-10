@@ -1,9 +1,9 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import * as mongoose from 'mongoose';
-import { HydratedDocument } from 'mongoose';
+import { Profile } from "src/profile/profile.entity";
 
 // Use this type for common usecase
-export type UserDocument = HydratedDocument<Omit<User, 'password'>>;
+export type UserDocument = mongoose.HydratedDocument<Omit<User, 'password'>>;
 
 @Schema()
 export class User extends mongoose.Document {
@@ -18,6 +18,9 @@ export class User extends mongoose.Document {
 
   @Prop({ required: true, select: false })
   password: string;
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Profile.name })
+  profile?: mongoose.Types.ObjectId;
 }
 
 export const UserSchema = SchemaFactory.createForClass<Omit<User, 'password'>>(User);

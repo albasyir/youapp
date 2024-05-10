@@ -1,5 +1,5 @@
-import Button from 'components/atoms/button';
-import InputField from 'components/atoms/input-field';
+import ButtonAtom from 'components/atoms/button';
+import InputField from 'components/molecules/input-field';
 import { youappService, YouAppServiceError } from 'services/youapp';
 import { HttpStatusCode } from 'axios';
 import React, { useState } from 'react';
@@ -41,7 +41,7 @@ const LoginPage: React.FC = () => {
 
     if (!identity) return;
 
-    window.localStorage.setItem("token", identity.data.token);
+    window.localStorage.setItem("user", JSON.stringify(identity.data));
     navigate("/")
   };
 
@@ -50,27 +50,27 @@ const LoginPage: React.FC = () => {
       <h1>Login</h1>
       <form onSubmit={handleSubmit}>
         <InputField
+          variant='glass'
           className="mb-3"
           id="username"
-          label="Username"
           type="text"
           value={username}
           onChange={handleUsernameChange}
           placeholder="Username"
         />
         <InputField
+          variant='glass'
           className="mb-3"
           id="password"
-          label="Password"
           type="password"
           value={password}
           onChange={handlePasswordChange}
           placeholder="Password"
         />
         <div className="mt-4">
-          <Button type="submit" disabled={!canBeSubmitted}>
+          <ButtonAtom type="submit" disabled={!canBeSubmitted} width='w-full'>
             Login
-          </Button>
+          </ButtonAtom>
         </div>
       </form>
 

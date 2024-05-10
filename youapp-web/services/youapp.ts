@@ -2,7 +2,7 @@ import { Api, HttpException } from "sdk/youapp-service";
 import { AxiosError } from "axios";
 
 export const youappService = new Api({
-  baseURL: "http://localhost:3000"
+  baseURL: "http://localhost:3000/api"
 });
 
 youappService.instance.interceptors.request.use((config) => {

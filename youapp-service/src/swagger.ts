@@ -17,12 +17,15 @@ export async function buildSwagger(app: INestApplication) {
       "Your Next Candidate: Aziz",
       "https://www.linkedin.com/in/albasyir/",
       "@abdulazizalbasyir119@gmail.com"
-    )
+  )
     .addBearerAuth()
     .build();
 
   const options: SwaggerDocumentOptions = {
-    operationIdFactory: (controllerName: string, methodName: string) => methodName,
+    ignoreGlobalPrefix: true,
+    operationIdFactory: (controllerName: string, methodName: string) => {
+      return methodName;
+    },
   };
 
   const document = SwaggerModule.createDocument(app, config, options);
