@@ -1,4 +1,4 @@
-import { Api, HttpException } from "@/sdk/youapp-service";
+import { Api, HttpException } from "sdk/youapp-service";
 import { AxiosError } from "axios";
 
 export const youappService = new Api({

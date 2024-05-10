@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Building a single page application with Next.js and React Router
 
-## Getting Started
+There are many reasons to use React Router inside a Next.js project! React Router is far more flexible than Next's router and makes it easy to share layout and state between among routes, even deeply nested ones. Doing this with Next.js requires consolidating all your shared logic in a custom `_app.tsx` component and using [complicated layout hacks](https://adamwathan.me/2019/10/17/persistent-layout-patterns-in-nextjs/).
 
-First, run the development server:
+If you're building a single-page application and SEO isn't a concern, using React Router with Next.js is a powerful combination. Unfortunately there is no guidance for how to do this provided by th Next.js team. This repo demonstrates how this can be achieved.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+For the full description of this project, go to [https://colinhacks.com/essays/building-a-spa-with-nextjs](https://colinhacks.com/essays/building-a-spa-with-nextjs).
+
+### The approach
+
+The basic idea:
+
+1. Create a custom App (`/pages/_app.tsx`)
+
+2. Return `null` if `typeof window === "undefined"`. This is required to prevent react-router from throwing errors during the SSR step!
+
+```tsx
+// pages/_app.tsx
+
+import { AppProps } from 'next/app';
+
+function App({ Component, pageProps }: AppProps) {
+  return (
+    <div suppressHydrationWarning> // <- ADD THIS
+      {typeof window === 'undefined' ? null : <Component {...pageProps} />}
+    </div>
+  );
+}
+
+export default App;
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. Rewrite all routes to the homepage
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```tsx
+// next.config.js
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+module.exports = {
+  async rewrites() {
+    return [
+      // Rewrite everything else to use `pages/index`
+      {
+        source: '/:path*',
+        destination: '/',
+      },
+    ];
+  },
+};
+```
 
-## Learn More
+Go to [https://colinhacks.com/essays/building-a-spa-with-nextjs](https://colinhacks.com/essays/building-a-spa-with-nextjs) for more details.
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Feel free to tweet questions to me [@colinhacks](https://twitter.com/colinhacks) 🤙
