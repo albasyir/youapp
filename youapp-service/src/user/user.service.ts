@@ -44,6 +44,10 @@ export class UserService {
       })
   }
 
+  async findByUserId(id: string) {
+    return this.userModel.findOne({ _id: id })
+  }
+
   async findUserByEmailOrUsername(payload: Pick<User, 'username' | 'email'>): Promise<UserDocument> {
     const user = this.userModel.findOne({
         $or: [{ email: payload.email }, { username: payload.username }],

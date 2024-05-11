@@ -6,23 +6,13 @@ import { RequestMethod, ValidationPipe } from '@nestjs/common';
 // boostrap
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix("/api", {
-    exclude: [
-      {
-        path: '/docs',
-        method: RequestMethod.GET
-      },
-      {
-        path: '/docs-json',
-        method: RequestMethod.GET
-      }
-    ]
-  })
   app.enableCors();
 
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
     }),
   );
 

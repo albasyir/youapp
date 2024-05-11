@@ -9,6 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import { Config } from 'src/app.config';
 import { RegistrationResponseDto } from './dto/registration-response.dto';
 import { LoginResponseDto } from './dto/login-response.dto';
+import { UserDataOnToken } from './auth.guard';
 
 @Injectable()
 export class AuthService {
@@ -30,7 +31,7 @@ export class AuthService {
     const user = await this.userService.create(newUser);
 
     const jwt = await this
-      .signTokenFromUser({ email: user.email, id: user.id })
+      .signTokenFromUser(user)
       .catch((e: Error) => {
         this.logger.fatal("try to sign JWT", e, {
           user
@@ -70,10 +71,7 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    const jwt = await this.signTokenFromUser({
-      email: user.email,
-      id: user.id
-    }).catch((e) => {
+    const jwt = await this.signTokenFromUser(user).catch((e) => {
       this.logger.fatal(e, "signing-token");
       throw new InternalServerErrorException()
     });
@@ -88,11 +86,13 @@ export class AuthService {
     };
   }
 
-  async signTokenFromUser(user: Pick<User, 'id' | 'email'>) {
+  async signTokenFromUser(user: Pick<User, '_id' | 'email'>) {
+    const tokenDataStructure: UserDataOnToken = {
+      sub: String(user._id)
+    };
+
     return {
-      token: this.jwtService.sign(user, {
-        privateKey: this.jwtConfig.secret,
-      }),
+      token: this.jwtService.sign(tokenDataStructure),
     };
   }
 }

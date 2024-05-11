@@ -22,7 +22,6 @@ export async function buildSwagger(app: INestApplication) {
     .build();
 
   const options: SwaggerDocumentOptions = {
-    ignoreGlobalPrefix: true,
     operationIdFactory: (controllerName: string, methodName: string) => {
       return methodName;
     },

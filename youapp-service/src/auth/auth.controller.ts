@@ -2,10 +2,8 @@ import {
   Controller,
   Post,
   Body,
-  HttpException,
   HttpStatus,
   HttpCode,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegistrationRequestDto } from './dto/registration-request.dto';

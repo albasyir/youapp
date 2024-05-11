@@ -1,12 +1,15 @@
-import { CanActivate, ExecutionContext, Injectable, InternalServerErrorException, UnauthorizedException } from "@nestjs/common";
+import { CanActivate, ExecutionContext, Injectable, InternalServerErrorException, Logger, UnauthorizedException } from "@nestjs/common";
 import { Request } from "express";
 import { Reflector } from "@nestjs/core";
 import { IS_PUBLIC_PATH } from "./decorators/is-public.decorator";
 import { JwtService } from "@nestjs/jwt";
-import { User } from "src/user/user.entity";
+
+export type UserDataOnToken = { sub: string };
 
 @Injectable()
 export class AuthGuard implements CanActivate {
+  private logger = new Logger(AuthGuard.name);
+
   constructor(
     private reflector: Reflector,
     private jwtService: JwtService
@@ -18,14 +21,16 @@ export class AuthGuard implements CanActivate {
       context.getClass(),
     ]);
 
-    // if url is public, we dont need validate JWT
     if (isPublic) return true;
 
     const request: Request = this.getRequestFromContextOrFail(context);
     const token: string = this.extractTokenFromHeaderOrFail(request);
 
-    request["user"] = await this.jwtService.verifyAsync<User>(token).catch((err: Error) => {
-      throw new UnauthorizedException("JWT is't valid");
+    request["user"] = await this.jwtService.verifyAsync<UserDataOnToken>(token).catch((err: Error) => {
+      this.logger.warn("why this user sending invalid jwt?", {
+        token
+      });
+      throw new UnauthorizedException("JWT is invalid");
     });
 
     return true;
@@ -54,6 +59,9 @@ export class AuthGuard implements CanActivate {
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
+      this.logger.warn("endpoint got hit even there's no token", {
+        url: request.url
+      });
       throw new UnauthorizedException("token can't be readed");
     }
 

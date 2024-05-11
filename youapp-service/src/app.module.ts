@@ -19,21 +19,6 @@ import { ProfileModule } from './profile/profile.module';
       isGlobal: true,
       load: [config]
     }),
-    
-    /**
-     * JWT Module
-     */
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      inject:[ConfigService],
-      useFactory(config: ConfigService<Config>) {
-        const jwtConfig = config.get<Config['jwt']>("jwt");
-
-        return {
-          secret: jwtConfig.secret
-        }
-      }
-    }),
 
     /**
      * Mongoose Module
