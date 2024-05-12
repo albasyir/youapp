@@ -2,9 +2,11 @@ import BackButton from "components/atoms/back-button";
 import React, { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { LoginResponseDto } from "sdk/youapp-service";
+import { io, Socket } from "socket.io-client";
 
 export type PlatformLayoutContext = {
-  session: LoginResponseDto
+  session: LoginResponseDto,
+  socket: Socket
 };
 
 function PlatformLayout() {
@@ -20,9 +22,14 @@ function PlatformLayout() {
     return <>Redirecting...</>;
 
   const session: LoginResponseDto = JSON.parse(userDataStringtifed);
+  const socket = io('http://localhost:3000');
+
+  socket.on('connect', () => {
+    console.log("connected")
+  });
 
   const context: PlatformLayoutContext = {
-    session
+    session, socket
   }
 
   return (
