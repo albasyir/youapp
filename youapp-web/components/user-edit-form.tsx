@@ -1,17 +1,72 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import InputField from "./molecules/input-field";
 import UploadField from "./atoms/upload-field";
+import { PatchProfileRequestDto, PatchProfileRequestDtoGenderEnum } from "sdk/youapp-service";
+import dayjs, { Dayjs } from "dayjs";
 
-export default function UserEditForm() {
-  const [photo, setPhoto] = useState('');
+type UserEditFormProps = {
+  profile?: PatchProfileRequestDto;
+  onChange?: (data: PatchProfileRequestDto) => void;
+};
 
-  const henldeUploadFile = (e) => {
-    console.log(e.target.files[0])
+export default function UserEditForm(props: UserEditFormProps) {
+  const [imageFile, setImageFile] = useState<File | undefined>(undefined);
+
+  const [image, setImage] = useState<string | undefined>(undefined);
+  const [displayName, setDisplayName] = useState<string | undefined>(undefined);
+  const [gender, setGender] = useState<PatchProfileRequestDtoGenderEnum | undefined>(undefined);
+  const [birthday, setBirthday] = useState<string | undefined>(undefined);
+  const [height, setHeight] = useState<number | undefined>(undefined);
+  const [weight, setWeight] = useState<number | undefined>(undefined);
+
+  const dataChanged = (key: keyof PatchProfileRequestDto, value: any) => {
+    const data: PatchProfileRequestDto = {
+      image,
+      displayName,
+      gender,
+      birthday,
+      height,
+      weight
+    }
+
+    data[key] = value;
+
+    props.onChange && props.onChange(data);
+  };
+
+  const handleUploadFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+
+    const file = e.target.files[0];
+
+    if (!file) {
+      setImage(undefined);
+      setImageFile(undefined);
+    }
+
+    const base64image = Buffer.from(await file.arrayBuffer()).toString("base64");
+
+    setImageFile(file);
+    setImage(base64image);
+    dataChanged('image', base64image);
   }
+
+  const handleInputChange = (key: keyof PatchProfileRequestDto, setter: React.Dispatch<React.SetStateAction<any>>) => (value: any) => {
+    dataChanged(key, value);
+    setter(value);
+  };
+  
+  useEffect(() => {
+    setDisplayName(props.profile?.displayName);
+    setGender(props.profile?.gender);
+    setBirthday(props.profile?.birthday);
+    setHeight(props.profile?.height);
+    setWeight(props.profile?.weight);
+  }, [props.profile, displayName, gender, birthday, height, weight]);
 
   return (
     <form className="space-y-4">
-      <UploadField onChange={henldeUploadFile} />
+      <UploadField file={imageFile} onChange={handleUploadFile} accept="image/*" />
 
       <div className="flex">
         <label htmlFor="displayName" className="text-sm font-medium text-gray-700 w-1/2">
@@ -23,6 +78,8 @@ export default function UserEditForm() {
           type="text"
           className="w-full"
           align="right"
+          value={displayName}
+          onChange={handleInputChange('displayName', setDisplayName)}
         />
       </div>
 
@@ -47,10 +104,12 @@ export default function UserEditForm() {
             bg-[#1A252A]
             py-2
           "
+          value={gender}
+          onChange={handleInputChange('gender',setGender)}
         >
           <option value="">Select Gender</option>
-          <option value="male">Male</option>
-          <option value="female">Female</option>
+          <option value={PatchProfileRequestDtoGenderEnum.Male}>Male</option>
+          <option value={PatchProfileRequestDtoGenderEnum.Female}>Female</option>
         </select>
       </div>
 
@@ -63,6 +122,8 @@ export default function UserEditForm() {
           type="date"
           className="w-full"
           align="right"
+          value={dayjs(birthday).format('YYYY-MM-DD')}
+          onChange={handleInputChange('birthday',setBirthday)}
         />
       </div>
 
@@ -75,6 +136,8 @@ export default function UserEditForm() {
           type="number"
           className="w-full"
           align="right"
+          value={height?.toString()}
+          onChange={handleInputChange('height',setHeight)}
         />
       </div>
 
@@ -87,9 +150,10 @@ export default function UserEditForm() {
           type="number"
           className="w-full"
           align="right"
+          value={weight?.toString()}
+          onChange={handleInputChange('weight',setWeight)}
         />
       </div>
     </form>
-
   )
 }

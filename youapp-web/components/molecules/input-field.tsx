@@ -43,11 +43,7 @@ export default function InputField(props: InputFieldProps) {
 
   return (
     <input
-      id={props.id}
-      name={props.id}
-      type={props.type}
-      autoComplete={props.id}
-      required
+      {...props}
       className={`
           ${theme[variant]}
           ${alignOptions[align]}
@@ -59,7 +55,6 @@ export default function InputField(props: InputFieldProps) {
           border 
           sm:text-sm
         `}
-      placeholder={props.placeholder}
       value={props.value}
       onChange={(e) => props.onChange && props.onChange(e.target.value)}
     />

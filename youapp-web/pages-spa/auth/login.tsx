@@ -1,4 +1,4 @@
-import ButtonAtom from 'components/atoms/button';
+import Button from 'components/atoms/button';
 import InputField from 'components/molecules/input-field';
 import { youappService, YouAppServiceError } from 'services/youapp';
 import { HttpStatusCode } from 'axios';
@@ -68,9 +68,9 @@ const LoginPage: React.FC = () => {
           placeholder="Password"
         />
         <div className="mt-4">
-          <ButtonAtom type="submit" disabled={!canBeSubmitted} width='w-full'>
+          <Button type="submit" disabled={!canBeSubmitted} width='w-full'>
             Login
-          </ButtonAtom>
+          </Button>
         </div>
       </form>
 

@@ -33,6 +33,11 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException("JWT is invalid");
     });
 
+    if (!request["user"].sub) {
+      this.logger.error("JWT is not valid content", request["user"])
+      throw new UnauthorizedException("JWT is invalid content");
+    }
+
     return true;
   }
 

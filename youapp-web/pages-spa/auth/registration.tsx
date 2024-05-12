@@ -1,5 +1,5 @@
 import { HttpStatusCode } from 'axios';
-import ButtonAtom from 'components/atoms/button';
+import Button from 'components/atoms/button';
 import InputField from 'components/molecules/input-field';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -104,9 +104,9 @@ const RegistrationPage: React.FC = () => {
           placeholder="Password"
         />
         <div className="mt-4">
-          <ButtonAtom type="submit" disabled={canBeSubmitted} width='w-full'>
+          <Button type="submit" disabled={canBeSubmitted} width='w-full'>
             Register
-          </ButtonAtom>
+          </Button>
         </div>
       </form>
 

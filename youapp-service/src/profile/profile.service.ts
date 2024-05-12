@@ -18,12 +18,12 @@ export class ProfileService {
   async getCurrentProfileIdOrFail(): Promise<string> {
     const user: UserDataOnToken = this.request['user'];
 
-    if (!user) throw new InternalServerErrorException("can't find current user");
+    if (!user || !user.sub) throw new InternalServerErrorException("can't find current user");
 
     return user.sub;
   }
 
-  async currentProfileOrFail(): Promise<UserDocument> {
+  async getCurrentProfileOrFail(): Promise<UserDocument> {
     const currentUserId = await this.getCurrentProfileIdOrFail();
 
     const user = await this.userService.findByUserId(currentUserId).catch(e => {
@@ -32,7 +32,7 @@ export class ProfileService {
     });
 
     if (!user) {
-      this.logger.warn("this proces should expect user document");
+      this.logger.warn("this method should expect user document", { currentUserId });
       throw new UnauthorizedException("user is not found");
     }
 
@@ -40,7 +40,7 @@ export class ProfileService {
   }
   
   async patchUserProfile(newUserProfile: PatchProfileRequestDto): Promise<UserDocument> {
-    const currentUser = await this.currentProfileOrFail();
+    const currentUser = await this.getCurrentProfileOrFail();
 
     const userWithNewProfile = Object.assign(currentUser, newUserProfile);
 

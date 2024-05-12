@@ -58,6 +58,88 @@ export interface LoginResponseDto {
   token: string;
 }
 
+export interface GetProfileResponse {
+  /**
+   * used to as user identifier
+   * @example "aziz"
+   */
+  username: string;
+  /**
+   * user email
+   * @example "abdulazizalbasyir119@gmail.com"
+   */
+  email: string;
+  /**
+   * display name of the user
+   * @example "Aziz"
+   */
+  displayName?: string;
+  /**
+   * gender of the user
+   * @example "male"
+   */
+  gender?: GetProfileResponseGenderEnum;
+  /**
+   * birthday of the user
+   * @format date-time
+   * @example "1998-11-08"
+   */
+  birthday?: string;
+  /**
+   * height of the user
+   * @example 180
+   */
+  height?: number;
+  /**
+   * weight of the user
+   * @example 70
+   */
+  weight?: number;
+  /**
+   * profile image of the user
+   * @example "base64:xxxx"
+   */
+  image?: string;
+  _id: string;
+  __v?: number;
+  horoscope: string;
+  zodiac: string;
+}
+
+export interface PatchProfileRequestDto {
+  /**
+   * display name of the user
+   * @example "Aziz"
+   */
+  displayName?: string;
+  /**
+   * gender of the user
+   * @example "male"
+   */
+  gender?: PatchProfileRequestDtoGenderEnum;
+  /**
+   * birthday of the user
+   * @format date-time
+   * @example "1998-11-08"
+   */
+  birthday?: string;
+  /**
+   * height of the user
+   * @example 180
+   */
+  height?: number;
+  /**
+   * weight of the user
+   * @example 70
+   */
+  weight?: number;
+  /**
+   * profile image of the user
+   * @example "base64:xxxx"
+   */
+  image?: string;
+}
+
 export interface BadRequestError {
   /** information which data was fail */
   property?: string;
@@ -79,9 +161,31 @@ export interface HttpException {
   }[];
 }
 
+/**
+ * gender of the user
+ * @example "male"
+ */
+export enum GetProfileResponseGenderEnum {
+  Male = "male",
+  Female = "female",
+}
+
+/**
+ * gender of the user
+ * @example "male"
+ */
+export enum PatchProfileRequestDtoGenderEnum {
+  Male = "male",
+  Female = "female",
+}
+
 export type RegistrationData = RegistrationResponseDto;
 
 export type SignInData = LoginResponseDto;
+
+export type GetData = GetProfileResponse;
+
+export type PatchData = GetProfileResponse;
 
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from "axios";
 import axios from "axios";
@@ -253,6 +357,43 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/auth/login`,
         method: "POST",
         body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+  };
+  profile = {
+    /**
+     * No description
+     *
+     * @tags profile
+     * @name Get
+     * @request GET:/profile
+     * @secure
+     * @response `200` `GetData`
+     */
+    get: (params: RequestParams = {}) =>
+      this.request<GetData, any>({
+        path: `/profile`,
+        method: "GET",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags profile
+     * @name Patch
+     * @request PATCH:/profile
+     * @secure
+     * @response `202` `PatchData`
+     */
+    patch: (data: PatchProfileRequestDto, params: RequestParams = {}) =>
+      this.request<PatchData, any>({
+        path: `/profile`,
+        method: "PATCH",
+        body: data,
+        secure: true,
         type: ContentType.Json,
         ...params,
       }),

@@ -1,8 +1,12 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import * as mongoose from 'mongoose';
 
-// Use this type for common usecase
 export type UserDocument = mongoose.HydratedDocument<Omit<User, 'password'>>;
+
+export enum Gender {
+  male = 'male',
+  female = 'female'
+}
 
 @Schema()
 export class User extends mongoose.Document {
@@ -21,8 +25,11 @@ export class User extends mongoose.Document {
   @Prop()
   displayName?: string;
 
-  @Prop({ enum: ['male', 'female'] })
-  gender?: 'male' | 'female';
+  @Prop({
+    enum: Object.values(Gender),
+    type: String
+  })
+  gender?: Gender;
 
   @Prop()
   birthday?: Date;
@@ -35,6 +42,12 @@ export class User extends mongoose.Document {
 
   @Prop()
   image?: string;
+
+  @Prop()
+  horoscope: string;
+
+  @Prop()
+  zodiac: string;
 }
 
-export const UserSchema = SchemaFactory.createForClass<Omit<User, 'password'>>(User);
+export const UserSchema = SchemaFactory.createForClass<Omit<User, 'password'>>(User)

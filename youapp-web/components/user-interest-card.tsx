@@ -10,7 +10,7 @@ export default function UserInterestCard({ interests = [] }: UserInterestCardPro
   return (
     <ActionableCard
       title="Interest"
-      action={<Link to="/me/interest/edit">Edit</Link>}
+      action={<Link to="/me/interest/edit"></Link>}
       className="bg-[#0E191F]"
     >
       {

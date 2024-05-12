@@ -72,7 +72,7 @@ export class AuthService {
     }
 
     const jwt = await this.signTokenFromUser(user).catch((e) => {
-      this.logger.fatal(e, "signing-token");
+      this.logger.fatal("error while signing token", user);
       throw new InternalServerErrorException()
     });
     

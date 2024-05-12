@@ -1,7 +1,8 @@
 
 import { IsDate, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
-
+import { Gender } from "../user.entity";
+import { Transform } from "class-transformer";
 export class CreateUserDto {
   @ApiProperty({ example: "aziz", description: "used to as user identifier" })
   @IsNotEmpty()
@@ -23,11 +24,12 @@ export class CreateUserDto {
   @IsString()
   displayName?: string;
 
-  @ApiProperty({ example: "male", description: "gender of the user", enum: ['male', 'female'], required: false })
+  @ApiProperty({ example: "male", description: "gender of the user", enum: Object.values(Gender), required: false })
   @IsOptional()
-  @IsEnum(['male', 'female'])
-  gender?: 'male' | 'female';
+  @IsEnum(Object.values(Gender))
+  gender?: Gender;
 
+  @Transform(({ value }) => new Date(value))
   @ApiProperty({ example: "1998-11-08", description: "birthday of the user", required: false })
   @IsOptional()
   @IsDate()

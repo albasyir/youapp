@@ -6,6 +6,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { Config, config } from './app.config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ProfileModule } from './profile/profile.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -39,7 +40,8 @@ import { ProfileModule } from './profile/profile.module';
 
     AuthModule,
     UserModule,
-    ProfileModule
+    ProfileModule,
+    ChatModule
   ],
 })
 export class AppModule {
