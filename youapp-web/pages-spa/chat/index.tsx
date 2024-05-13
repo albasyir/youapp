@@ -30,12 +30,12 @@ const ChatPage: React.FC = () => {
 
       messages.push(newmsg);
       setMessages(messages);
+      setMessage('');
     })
   }, [])
 
   const handleSendMessage = () => {
     socket.emit('chat.world', message);
-    setMessage('');
   };
 
   return (
