@@ -95,4 +95,10 @@ export class AuthService {
       token: this.jwtService.sign(tokenDataStructure),
     };
   }
+
+  async verifyToken(token: string): Promise<UserDataOnToken> {
+    return this.jwtService.verifyAsync<UserDataOnToken>(token).catch((err: Error) => {
+      throw new UnauthorizedException("JWT is invalid");
+    });
+  }
 }

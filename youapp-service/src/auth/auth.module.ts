@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { JwtModule } from "@nestjs/jwt";
+import { JwtModule, JwtService } from "@nestjs/jwt";
 import { APP_GUARD } from "@nestjs/core";
 import { AuthGuard } from "./auth.guard";
 import { PassportModule } from "@nestjs/passport";
@@ -37,5 +37,6 @@ import { Config } from "src/app.config";
     AuthService,
   ],
   controllers: [AuthController],
+  exports: [AuthService]
 })
 export class AuthModule { }

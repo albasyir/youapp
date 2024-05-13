@@ -22,7 +22,11 @@ function PlatformLayout() {
     return <>Redirecting...</>;
 
   const session: LoginResponseDto = JSON.parse(userDataStringtifed);
-  const socket = io('http://localhost:3000');
+  const socket = io('http://localhost:3000', {
+    auth: {
+      token: session.token
+    }
+  });
 
   socket.on('connect', () => {
     console.log("connected")

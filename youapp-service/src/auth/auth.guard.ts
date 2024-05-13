@@ -1,8 +1,9 @@
-import { CanActivate, ExecutionContext, Injectable, InternalServerErrorException, Logger, UnauthorizedException } from "@nestjs/common";
+import { CanActivate, ExecutionContext, HttpException, Injectable, InternalServerErrorException, Logger, UnauthorizedException } from "@nestjs/common";
 import { Request } from "express";
 import { Reflector } from "@nestjs/core";
 import { IS_PUBLIC_PATH } from "./decorators/is-public.decorator";
 import { JwtService } from "@nestjs/jwt";
+import { AuthService } from "./auth.service";
 
 export type UserDataOnToken = { sub: string };
 
@@ -12,7 +13,8 @@ export class AuthGuard implements CanActivate {
 
   constructor(
     private reflector: Reflector,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private authService: AuthService,
   ) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -26,17 +28,17 @@ export class AuthGuard implements CanActivate {
     const request: Request = this.getRequestFromContextOrFail(context);
     const token: string = this.extractTokenFromHeaderOrFail(request);
 
-    request["user"] = await this.jwtService.verifyAsync<UserDataOnToken>(token).catch((err: Error) => {
-      this.logger.warn("why this user sending invalid jwt?", {
-        token
-      });
-      throw new UnauthorizedException("JWT is invalid");
+    request["user"] = await this.authService.verifyToken(token).catch((err: HttpException) => {
+      this.logger.warn("why this user sending invalid jwt?", { token });
+      throw err;
     });
 
     if (!request["user"].sub) {
       this.logger.error("JWT is not valid content", request["user"])
       throw new UnauthorizedException("JWT is invalid content");
     }
+
+    this.logger.log("request from authenticated user", request["user"])
 
     return true;
   }
