@@ -1,16 +1,17 @@
 import BackButton from "components/atoms/back-button";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { LoginResponseDto } from "sdk/youapp-service";
 import { io, Socket } from "socket.io-client";
 
 export type PlatformLayoutContext = {
-  session: LoginResponseDto,
-  socket: Socket
+  session?: LoginResponseDto,
+  socket?: Socket
 };
 
 function PlatformLayout() {
   const navigate = useNavigate();
+
   const userDataStringtifed = window.localStorage.getItem("user");
   const isUnauthorized = !userDataStringtifed;
 
@@ -22,6 +23,7 @@ function PlatformLayout() {
     return <>Redirecting...</>;
 
   const session: LoginResponseDto = JSON.parse(userDataStringtifed);
+
   const socket = io('http://localhost:3000', {
     auth: {
       token: session.token

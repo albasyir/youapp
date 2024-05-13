@@ -21,15 +21,17 @@ const ChatPage: React.FC = () => {
     setMessage(data);
   };
 
-  socket.on('chat.world.reply', (data) => {
-    const newmsg = {
-      sender: "you",
-      text: message
-    }
+  useEffect(() => {
+    socket.on('chat.world.reply', (data) => {
+      const newmsg = {
+        sender: "you",
+        text: data
+      }
 
-    messages.push(newmsg)
-    setMessages(messages);
-  })
+      messages.push(newmsg);
+      setMessages(messages);
+    })
+  }, [])
 
   const handleSendMessage = () => {
     socket.emit('chat.world', message);

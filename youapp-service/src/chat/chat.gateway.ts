@@ -1,8 +1,6 @@
-import { HttpException, Logger, UseGuards } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
+import { HttpException, Logger } from '@nestjs/common';
 import { WebSocketGateway, SubscribeMessage, OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect, WebSocketServer } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
-import { AuthGuard } from 'src/auth/auth.guard';
 import { AuthService } from 'src/auth/auth.service';
 
 @WebSocketGateway({ cors: true })
@@ -27,7 +25,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     })
 
     this.logger.log(`Client connected ${client.id} by user id ${user.sub}`);
-    console.log(`Client connected: ${client.id}`);
   }
 
   handleDisconnect(client: Socket) {
