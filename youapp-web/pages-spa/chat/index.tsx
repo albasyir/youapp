@@ -24,8 +24,8 @@ const ChatPage: React.FC = () => {
   useEffect(() => {
     socket.on('chat.world.reply', (data) => {
       const newmsg = {
-        sender: "you",
-        text: data
+        sender: data.username,
+        text: data.text
       }
 
       messages.push(newmsg);

@@ -2,9 +2,7 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Patch } from '@nestjs/comm
 import { PatchProfileRequestDto } from './dto/patch-profile-request';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ProfileService } from './profile.service';
-import { User, UserDocument } from 'src/user/user.entity';
 import { GetProfileResponse } from './dto/get-profile-response';
-import { UserService } from 'src/user/user.service';
 
 @Controller('profile')
 @ApiTags('profile')
